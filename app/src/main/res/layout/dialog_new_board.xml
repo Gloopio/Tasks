@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pop_new_board"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/popupBackground"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/pop_new_board_closeDialogImg"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_clear_black_24dp"
+        android:tint="#fff"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="380dp"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:orientation="vertical">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:background="@color/popupBackground"
+                      android:gravity="center_horizontal"
+                      android:orientation="vertical"
+                      android:padding="16dp">
+
+
+            <EditText
+                android:id="@+id/dialog_new_board_board_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter task name"
+                android:textColorHint="#bababa"
+                android:textAlignment="center"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/text_size"/>
+
+            <Button
+                android:id="@+id/dialog_new_board_btn_generate_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/button"
+                android:text="generate name"
+                android:textColor="@color/popupButtonForeground"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingTop="26dp">
+
+                <Switch
+                    android:id="@+id/dialog_new_board_switch_private"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/private_label"
+                    android:textColor="@color/textColor"
+                    android:textSize="18sp"
+                    android:theme="@style/Color1SwitchStyle"/>
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/only_approved_drawers_can_view_this_board"
+                    android:textColor="@color/textColor"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="16dp">
+
+                <Switch
+                    android:id="@+id/dialog_new_board_switch_freeze"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/freeze"
+                    android:textColor="@color/textColor"
+                    android:textSize="18sp"
+                    android:theme="@style/Color1SwitchStyle"/>
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/only_i_can_edit_this_board"
+                    android:textColor="@color/textColor"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/dialog_new_board_btn_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button"
+                    android:text="@string/close"
+                    android:textColor="@color/popupButtonForeground"/>
+
+                <Button
+                    android:id="@+id/dialog_new_board_btn_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button"
+                    android:text="@string/save"
+                    android:textColor="@color/popupButtonForeground"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>
