@@ -1,5 +1,5 @@
-# Drawed App
-The Drawing app is a demo app to demonstrate the usage of [Gloop](gloop.io). 
+# Tasks App
+Tasks demo app to demonstrate the usage of [Gloop](gloop.io). 
 
 ## Requiremens
 - At least Android Studio 3.0
