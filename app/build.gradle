@@ -6,12 +6,12 @@ buildscript {
         mavenCentral()
     }
 
-//    dependencies {
-//        classpath 'io.fabric.tools:gradle:1.24.1'
-//    }
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.24.1'
+    }
 }
 apply plugin: 'com.android.application'
-//apply plugin: 'io.fabric'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 25
@@ -106,7 +106,7 @@ dependencies {
 
     compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.1-rc1'
 
-//    compile 'com.google.android.gms:play-services-auth:11.4.2'
+    compile 'com.google.android.gms:play-services-auth:11.4.2'
     compile 'com.google.android.gms:play-services-analytics:11.4.2'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -119,4 +119,4 @@ dependencies {
 
 
 }
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'

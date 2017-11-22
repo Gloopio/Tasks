@@ -35,13 +35,15 @@
     <color name="Pink">#D52A6D</color>
     <color name="Violet">#6b0597</color>
 
+    <color name="Gray">#6e6e6d</color>
+
 
     <color name="window_background">#FFF5F5F5</color>
 
 
-    <color name="login_button_background">#0098f4</color>
+    <color name="login_button_background">#F96D2E</color>
     <color name="login_button_text_color">#fff</color>
-    <color name="login_text_color">#0098f4</color>
+    <color name="login_text_color">#fff</color>
 
     <color name="card_background_color">#fff</color>
     <color name="edit_text_color">#fff</color>

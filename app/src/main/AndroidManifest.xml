@@ -38,7 +38,7 @@
             android:label="@string/title_item_detail"
             android:parentActivityName="io.gloop.tasks.TaskListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.gloop.tasks.TaskListActivity"/>
@@ -75,18 +75,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <!--<service android:name="com.google.android.gms.analytics.AnalyticsService"-->
-                 <!--android:enabled="true"-->
-                 <!--android:exported="false"/>-->
+        <service android:name="com.google.android.gms.analytics.AnalyticsService"
+                 android:enabled="true"
+                 android:exported="false"/>
 
-        <receiver
-            android:name=".receivers.NotificationReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="YES_ACTION"/>
-                <action android:name="STOP_ACTION"/>
-            </intent-filter>
-        </receiver>
+        <!--<receiver-->
+            <!--android:name=".receivers.NotificationReceiver"-->
+            <!--android:exported="false">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="YES_ACTION"/>-->
+                <!--<action android:name="STOP_ACTION"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
         <!--<activity android:name="com.facebook.FacebookActivity"-->
                   <!--android:configChanges=-->
@@ -103,11 +103,14 @@
 
         <meta-data
             android:name="io.gloop.ApiKey"
-            android:value="2296eac9-67d8-4b84-9e7c-e6bd3777e346"/>
+            android:value="f1bdfa56-a26d-4346-8b41-a8d65b4fcc4a"/>
         <!--<meta-data-->
         <!--android:name="io.gloop.Host"-->
         <!--android:value="192.168.0.87:8080"/>-->
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="d0f1e70e1d5744ad206e0eff1cd3c02cb3a2e4ab" />
     </application>
 
 </manifest>

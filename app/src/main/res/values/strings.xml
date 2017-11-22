@@ -76,6 +76,8 @@
     <string name="user_has_no_access">User %1$s has no access to the task.</string>
     <string name="my_tasks">My Tasks</string>
     <string name="groups">Groups</string>
+    <string name="members">Members</string>
+    <string name="done">Done</string>
 
 
 </resources>

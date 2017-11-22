@@ -12,15 +12,9 @@ import java.util.List;
 import io.gloop.Gloop;
 import io.gloop.GloopLogger;
 import io.gloop.permissions.GloopGroup;
-import io.gloop.tasks.model.TaskAccessRequest;
-import io.gloop.tasks.model.PrivateTaskRequest;
 import io.gloop.tasks.model.Task;
 import io.gloop.tasks.model.UserInfo;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
-
-import static io.gloop.permissions.GloopPermission.PUBLIC;
-import static io.gloop.permissions.GloopPermission.READ;
-import static io.gloop.permissions.GloopPermission.WRITE;
 
 public class QRCodeScannerActivity extends Activity implements ZXingScannerView.ResultHandler {
 
@@ -94,45 +88,45 @@ public class QRCodeScannerActivity extends Activity implements ZXingScannerView.
                 Toast.makeText(getApplicationContext(), R.string.board_added, Toast.LENGTH_LONG).show();
             } else {
                 // if the board is not public check the PrivateTaskRequest objects.
-                PrivateTaskRequest privateBoard = Gloop
-                        .all(PrivateTaskRequest.class)
-                        .where()
-                        .equalsTo("boardName", boardName)
-                        .first();
-
-                if (privateBoard != null) {
-
-                    UserInfo userInfo = Gloop.allLocal(UserInfo.class)
-                            .where()
-                            .equalsTo("email", Gloop.getOwner().getName())
-                            .first();
-
-
-                    TaskAccessRequest o = Gloop.all(TaskAccessRequest.class).where()
-                            .equalsTo("boardName", boardName)
-                            .and()
-                            .equalsTo("userId", Gloop.getOwner().getUserId())
-                            .first();
-                    if (o == null) {
-
-                        // request access to private board with the TaskAccessRequest object.
-                        TaskAccessRequest request = new TaskAccessRequest();
-                        request.setUser(privateBoard.getBoardCreator(), PUBLIC | READ | WRITE);
-                        request.setBoardName(boardName);
-                        request.setBoardCreator(privateBoard.getBoardCreator());
-                        request.setUserId(Gloop.getOwner().getUserId());
-                        request.setBoardGroupId(privateBoard.getGroupId());
-                        if (userInfo != null)
-                            request.setUserImageUri(userInfo.getImageURL().toString());
-                        request.save();
-                        Toast.makeText(getApplicationContext(), R.string.request_access_to_board, Toast.LENGTH_LONG).show();
-                    }
+//                PrivateTaskRequest privateBoard = Gloop
+//                        .all(PrivateTaskRequest.class)
+//                        .where()
+//                        .equalsTo("boardName", boardName)
+//                        .first();
+//
+//                if (privateBoard != null) {
+//
+//                    UserInfo userInfo = Gloop.allLocal(UserInfo.class)
+//                            .where()
+//                            .equalsTo("email", Gloop.getOwner().getName())
+//                            .first();
+//
+//
+//                    TaskAccessRequest o = Gloop.all(TaskAccessRequest.class).where()
+//                            .equalsTo("boardName", boardName)
+//                            .and()
+//                            .equalsTo("userId", Gloop.getOwner().getUserId())
+//                            .first();
+//                    if (o == null) {
+//
+//                        // request access to private board with the TaskAccessRequest object.
+//                        TaskAccessRequest request = new TaskAccessRequest();
+//                        request.setUser(privateBoard.getBoardCreator(), PUBLIC | READ | WRITE);
+//                        request.setBoardName(boardName);
+//                        request.setBoardCreator(privateBoard.getBoardCreator());
+//                        request.setUserId(Gloop.getOwner().getUserId());
+//                        request.setBoardGroupId(privateBoard.getGroupId());
+//                        if (userInfo != null)
+//                            request.setUserImageUri(userInfo.getImageURL().toString());
+//                        request.save();
+//                        Toast.makeText(getApplicationContext(), R.string.request_access_to_board, Toast.LENGTH_LONG).show();
+//                    }
                     mScannerView.stopCamera();
                     finish();
 //                    mScannerView.resumeCameraPreview(QRCodeScannerActivity.this);
-                } else {
-                    GloopLogger.i("Could not find public board with name: " + boardName);
-                }
+//                } else {
+//                    GloopLogger.i("Could not find public board with name: " + boardName);
+//                }
 
             }
         }

@@ -3,12 +3,10 @@ package io.gloop.tasks.dialogs;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
@@ -21,11 +19,8 @@ import android.widget.ImageView;
 
 import com.github.clans.fab.FloatingActionMenu;
 
-import java.util.Objects;
-
 import io.gloop.permissions.GloopUser;
 import io.gloop.tasks.R;
-import io.gloop.tasks.model.TaskGroup;
 import io.gloop.tasks.model.UserInfo;
 import io.gloop.tasks.utils.NameUtil;
 
@@ -73,51 +68,51 @@ public class NewGroupDialog {
             @Override
             public void onClick(View v) {
 
-                new AsyncTask<Void, Void, TaskGroup>() {
-
-                    private ProgressDialog progress;
-
-                    @Override
-                    protected void onPreExecute() {
-                        super.onPreExecute();
-
-                        progress = new ProgressDialog(context);
-                        progress.setTitle("Creating new task");
-                        progress.setMessage("Wait while loading...");
-                        progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
-                        progress.show();
-                    }
-
-                    @Override
-                    protected TaskGroup doInBackground(Void... voids) {
-                        final TaskGroup group = new TaskGroup();
-
-                        if (!Objects.equals(etBoardName.getText().toString(), ""))
-                            group.setName(etBoardName.getText().toString());
-                        else
-                            group.setName(NameUtil.randomAdjective(context) + colorName + NameUtil.randomObject(context));
-
-                        group.save();
-
-                        return group;
-                    }
-
-                    @Override
-                    protected void onPostExecute(TaskGroup task) {
-                        super.onPostExecute(task);
-                        Context context = view.getContext();
-//                        Intent intent = new Intent(context, TaskDetailActivity.class);
-//                        intent.putExtra(TaskDetailFragment.ARG_BOARD, task);
-//                        intent.putExtra(TaskDetailFragment.ARG_USER_INFO, userInfo);
-
-//                        context.startActivity(intent);
-
-                        progress.dismiss();
-
-                        // close popup
-                        dialog.dismiss();
-                    }
-                }.execute();
+//                new AsyncTask<Void, Void, TaskGroup>() {
+//
+//                    private ProgressDialog progress;
+//
+//                    @Override
+//                    protected void onPreExecute() {
+//                        super.onPreExecute();
+//
+//                        progress = new ProgressDialog(context);
+//                        progress.setTitle("Creating new task");
+//                        progress.setMessage("Wait while loading...");
+//                        progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+//                        progress.show();
+//                    }
+//
+//                    @Override
+//                    protected TaskGroup doInBackground(Void... voids) {
+//                        final TaskGroup group = new TaskGroup();
+//
+//                        if (!Objects.equals(etBoardName.getText().toString(), ""))
+//                            group.setName(etBoardName.getText().toString());
+//                        else
+//                            group.setName(NameUtil.randomAdjective(context) + colorName + NameUtil.randomObject(context));
+//
+//                        group.save();
+//
+//                        return group;
+//                    }
+//
+//                    @Override
+//                    protected void onPostExecute(TaskGroup task) {
+//                        super.onPostExecute(task);
+//                        Context context = view.getContext();
+////                        Intent intent = new Intent(context, TaskDetailActivity.class);
+////                        intent.putExtra(TaskDetailFragment.ARG_BOARD, task);
+////                        intent.putExtra(TaskDetailFragment.ARG_USER_INFO, userInfo);
+//
+////                        context.startActivity(intent);
+//
+//                        progress.dismiss();
+//
+//                        // close popup
+//                        dialog.dismiss();
+//                    }
+//                }.execute();
             }
         });
 

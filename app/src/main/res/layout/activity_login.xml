@@ -3,7 +3,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/background"
+              android:background="@drawable/splashscreen_background"
               android:gravity="center_horizontal"
               android:orientation="vertical"
               android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -42,7 +42,7 @@
                 android:layout_height="0dp"
                 android:textSize="60sp"
                 android:layout_marginBottom="20sp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@android:color/white"
                 android:layout_weight="1"
                 android:text="Tasks"/>
 
@@ -130,23 +130,23 @@
                     android:textColor="@color/login_button_text_color"
                     android:textStyle="bold"/>
 
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginTop="20dp"-->
-                    <!--android:text="OR"/>-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="OR"/>
 
-                <!--<LinearLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginTop="20dp">-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
 
-                    <!--<com.google.android.gms.common.SignInButton-->
-                        <!--android:id="@+id/google_sign_in_button"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="56dp"-->
-                        <!--android:layout_marginTop="-3dp"-->
-                        <!--android:layout_weight="1"/>-->
+                    <com.google.android.gms.common.SignInButton
+                        android:id="@+id/google_sign_in_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="-3dp"
+                        android:layout_weight="1"/>
 
                     <!--<com.facebook.login.widget.LoginButton-->
                         <!--android:id="@+id/facebook_login_button"-->
@@ -161,7 +161,7 @@
                         <!--android:layout_gravity="center_horizontal"-->
                         <!--android:layout_weight="1"/>-->
 
-                <!--</LinearLayout>-->
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

@@ -1,5 +1,8 @@
 package io.gloop.tasks.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.gloop.GloopObject;
 
 /**
@@ -8,14 +11,24 @@ import io.gloop.GloopObject;
 
 public class Task extends GloopObject {
 
+    private boolean done;
     private String title;
     private String content;
-    private TaskGroup taskGroup;
     private boolean privateTask = false;
     private boolean freezeTask = false;
     private int color;
+    private Map<String, String> members = new HashMap<>();
 
-    public Task() {}
+    public Task() {
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
 
     public boolean isPrivateTask() {
         return privateTask;
@@ -32,7 +45,6 @@ public class Task extends GloopObject {
     public void setFreezeTask(boolean freezeTask) {
         this.freezeTask = freezeTask;
     }
-
 
     public int getColor() {
         return color;
@@ -58,11 +70,15 @@ public class Task extends GloopObject {
         this.content = content;
     }
 
-    public TaskGroup getTaskGroup() {
-        return taskGroup;
+    public void setMembers(Map<String, String> members) {
+        this.members = members;
     }
 
-    public void setTaskGroup(TaskGroup taskGroup) {
-        this.taskGroup = taskGroup;
+    public void addMember(String userId, String userImageUri) {
+        members.put(userId, userImageUri);
+    }
+
+    public Map<String, String> getMembers() {
+        return members;
     }
 }

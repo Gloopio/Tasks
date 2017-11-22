@@ -46,20 +46,15 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.gloop.Gloop;
-import io.gloop.GloopList;
-import io.gloop.GloopOnChangeListener;
 import io.gloop.permissions.GloopUser;
-import io.gloop.tasks.dialogs.AcceptBoardAccessDialog;
 import io.gloop.tasks.dialogs.DayNightSettingsDialog;
-import io.gloop.tasks.dialogs.NewGroupDialog;
 import io.gloop.tasks.dialogs.NewTaskDialog;
 import io.gloop.tasks.dialogs.UserProfileDialog;
-import io.gloop.tasks.model.TaskAccessRequest;
 import io.gloop.tasks.model.UserInfo;
 import io.gloop.tasks.utils.SharedPreferencesStore;
 
-import static io.gloop.tasks.ListFragment.VIEW_GROUPS;
-import static io.gloop.tasks.ListFragment.VIEW_MY_TASKS;
+import static io.gloop.tasks.ListFragment.VIEW_CLOSED_TASKS;
+import static io.gloop.tasks.ListFragment.VIEW_OPEN_TASKS;
 
 
 public class TaskListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -161,23 +156,23 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
             }
         });
 
-        final FloatingActionButton fabNewGroup = (FloatingActionButton) findViewById(R.id.fab_menu_item_new_group);
-        fabNewGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new NewGroupDialog(TaskListActivity.this, owner, view, TaskListActivity.this.getSupportFragmentManager(), floatingActionMenu, userInfo);
-                floatingActionMenu.close(false);
-            }
-        });
+//        final FloatingActionButton fabNewGroup = (FloatingActionButton) findViewById(R.id.fab_menu_item_new_group);
+//        fabNewGroup.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                new NewGroupDialog(TaskListActivity.this, owner, view, TaskListActivity.this.getSupportFragmentManager(), floatingActionMenu, userInfo);
+//                floatingActionMenu.close(false);
+//            }
+//        });
 
-        FloatingActionButton fabScan = (FloatingActionButton) findViewById(R.id.fab_menu_item_scan);
-        fabScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchScanner(QRCodeScannerActivity.class);
-                floatingActionMenu.close(false);
-            }
-        });
+//        FloatingActionButton fabScan = (FloatingActionButton) findViewById(R.id.fab_menu_item_scan);
+//        fabScan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                launchScanner(QRCodeScannerActivity.class);
+//                floatingActionMenu.close(false);
+//            }
+//        });
 
         AppCompatDelegate.setDefaultNightMode(SharedPreferencesStore.getNightMode());
 
@@ -240,8 +235,8 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(ListFragment.newInstance(VIEW_MY_TASKS, userInfo, owner), "My Tasks");
-        adapter.addFragment(ListFragment.newInstance(VIEW_GROUPS, userInfo, owner), "Groups");
+        adapter.addFragment(ListFragment.newInstance(VIEW_OPEN_TASKS, userInfo, owner), "Open");
+        adapter.addFragment(ListFragment.newInstance(VIEW_CLOSED_TASKS, userInfo, owner), "Closed");
         viewPager.setAdapter(adapter);
     }
 
@@ -380,36 +375,36 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     }
 
 
-    public void checkForPrivateBoardAccessRequests() {
-        final GloopList<TaskAccessRequest> accessRequests = Gloop
-                .all(TaskAccessRequest.class)
-                .where()
-                .equalsTo("boardCreator", owner.getUserId())
-                .all();
-        for (final TaskAccessRequest accessRequest : accessRequests) {
-//            NotificationUtil.show(TaskListActivity.this, accessRequest);
-            runOnUiThread(new Runnable() {
-                              @Override
-                              public void run() {
-                                  new AcceptBoardAccessDialog(TaskListActivity.this, accessRequest).show();
-                              }
-                          }
-            );
-        }
-
-
-//        GloopList<TaskAccessRequest> all = Gloop.all(TaskAccessRequest.class);
-        accessRequests.removeOnChangeListeners();
-        accessRequests.addOnChangeListener(new GloopOnChangeListener() {
-            @Override
-            public void onChange() {
-                for (TaskAccessRequest accessRequest : accessRequests) {
-//                    if (accessRequest.getBoardCreator().equals(owner.getUserId()))
-                    new AcceptBoardAccessDialog(TaskListActivity.this, accessRequest).show();
-                }
-            }
-        });
-    }
+//    public void checkForPrivateBoardAccessRequests() {
+//        final GloopList<TaskAccessRequest> accessRequests = Gloop
+//                .all(TaskAccessRequest.class)
+//                .where()
+//                .equalsTo("boardCreator", owner.getUserId())
+//                .all();
+//        for (final TaskAccessRequest accessRequest : accessRequests) {
+////            NotificationUtil.show(TaskListActivity.this, accessRequest);
+//            runOnUiThread(new Runnable() {
+//                              @Override
+//                              public void run() {
+//                                  new AcceptBoardAccessDialog(TaskListActivity.this, accessRequest).show();
+//                              }
+//                          }
+//            );
+//        }
+//
+//
+////        GloopList<TaskAccessRequest> all = Gloop.all(TaskAccessRequest.class);
+//        accessRequests.removeOnChangeListeners();
+//        accessRequests.addOnChangeListener(new GloopOnChangeListener() {
+//            @Override
+//            public void onChange() {
+//                for (TaskAccessRequest accessRequest : accessRequests) {
+////                    if (accessRequest.getBoardCreator().equals(owner.getUserId()))
+//                    new AcceptBoardAccessDialog(TaskListActivity.this, accessRequest).show();
+//                }
+//            }
+//        });
+//    }
 
     @Override
     public void onBackPressed() {

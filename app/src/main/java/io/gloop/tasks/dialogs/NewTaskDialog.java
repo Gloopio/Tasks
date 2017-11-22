@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -23,8 +24,11 @@ import com.github.clans.fab.FloatingActionMenu;
 
 import java.util.Objects;
 
+import io.gloop.permissions.GloopGroup;
 import io.gloop.permissions.GloopUser;
 import io.gloop.tasks.R;
+import io.gloop.tasks.TaskDetailActivity;
+import io.gloop.tasks.TaskDetailFragment;
 import io.gloop.tasks.model.Task;
 import io.gloop.tasks.model.UserInfo;
 import io.gloop.tasks.utils.ColorUtil;
@@ -91,12 +95,17 @@ public class NewTaskDialog {
 
                     @Override
                     protected Task doInBackground(Void... voids) {
-                        final Task task = new Task();
 
-//                        // test to grant additional permission to another user
-////                task.addPermission("test", 1000);
-//
-//                        // set name and color
+                        // create a group
+                        GloopGroup group = new GloopGroup();
+                        group.addMember(owner.getUserId());
+                        group.save();
+
+                        // create new task
+                        final Task task = new Task();
+                        task.setUser(group.getObjectId());
+
+                        // set color
                         if (!Objects.equals(etBoardName.getText().toString(), ""))
                             task.setTitle(etBoardName.getText().toString());
                         else
@@ -162,11 +171,10 @@ public class NewTaskDialog {
                     protected void onPostExecute(Task task) {
                         super.onPostExecute(task);
                         Context context = view.getContext();
-//                        Intent intent = new Intent(context, TaskDetailActivity.class);
-//                        intent.putExtra(TaskDetailFragment.ARG_BOARD, task);
-//                        intent.putExtra(TaskDetailFragment.ARG_USER_INFO, userInfo);
-
-//                        context.startActivity(intent);
+                        Intent intent = new Intent(context, TaskDetailActivity.class);
+                        intent.putExtra(TaskDetailFragment.ARG_BOARD, task);
+                        intent.putExtra(TaskDetailFragment.ARG_USER_INFO, userInfo);
+                        context.startActivity(intent);
 
                         progress.dismiss();
 

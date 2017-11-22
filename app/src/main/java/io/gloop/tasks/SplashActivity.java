@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import io.fabric.sdk.android.Fabric;
 import io.gloop.Gloop;
 import io.gloop.tasks.utils.BackgroundService;
 import io.gloop.tasks.utils.SharedPreferencesStore;
@@ -32,7 +34,7 @@ public class SplashActivity extends Activity {
         mTracker.setScreenName("Image~" + "SplashScreen");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
-//        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics());
 //        FacebookSdk.sdkInitialize(getApplicationContext());
         SharedPreferencesStore.setContext(getBaseContext());
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
@@ -15,9 +16,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_board);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        // run activity in fullscreen
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -27,14 +25,14 @@ public class TaskDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-//            Bundle arguments = new Bundle();
-//            arguments.putSerializable(TaskDetailFragment.ARG_BOARD, getIntent().getSerializableExtra(TaskDetailFragment.ARG_BOARD));
-//            arguments.putSerializable(TaskDetailFragment.ARG_USER_INFO, getIntent().getSerializableExtra(TaskDetailFragment.ARG_USER_INFO));
-//            TaskDetailFragment fragment = new TaskDetailFragment();
-//            fragment.setArguments(arguments);
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.item_detail_container, fragment)
-//                    .commit();
+            Bundle arguments = new Bundle();
+            arguments.putSerializable(TaskDetailFragment.ARG_BOARD, getIntent().getSerializableExtra(TaskDetailFragment.ARG_BOARD));
+            arguments.putSerializable(TaskDetailFragment.ARG_USER_INFO, getIntent().getSerializableExtra(TaskDetailFragment.ARG_USER_INFO));
+            TaskDetailFragment fragment = new TaskDetailFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.item_detail_container, fragment)
+                    .commit();
         }
     }
 
@@ -46,5 +44,11 @@ public class TaskDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.task_detail_menu, menu);
+        return true;
     }
 }

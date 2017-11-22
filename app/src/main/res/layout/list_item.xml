@@ -52,13 +52,13 @@
                         android:textSize="@dimen/text_size"/>
 
                     <ImageView
-                        android:id="@+id/board_favorite"
+                        android:id="@+id/task_done"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerInParent="true"
                         android:paddingEnd="15dp"
-                        android:src="@drawable/ic_star_border_black_24dp"
+                        android:src="@drawable/ic_done_white_24dp"
                         android:tag="notSelected"
                         android:tint="@color/Yellow"/>
 
@@ -71,16 +71,16 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="10dp">
 
-                    <TextView
-                        android:id="@+id/lines"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:text="Lines: 0"
-                        android:textAppearance="?attr/textAppearanceListItem"
-                        android:textColor="@android:color/darker_gray"
-                        android:textSize="15sp"/>
+                    <!--<TextView-->
+                        <!--android:id="@+id/lines"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingLeft="15dp"-->
+                        <!--android:paddingRight="15dp"-->
+                        <!--android:text="Lines: 0"-->
+                        <!--android:textAppearance="?attr/textAppearanceListItem"-->
+                        <!--android:textColor="@android:color/darker_gray"-->
+                        <!--android:textSize="15sp"/>-->
 
 
                     <LinearLayout

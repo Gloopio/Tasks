@@ -19,3 +19,4 @@ keystore
 debug.keystore
 app/fabric.properties
 app/release
+app/google-services.json

@@ -39,9 +39,9 @@
     <color name="window_background">#28292E</color>
 
 
-    <color name="login_button_background">#0098f4</color>
+    <color name="login_button_background">#F96D2E</color>
     <color name="login_button_text_color">#fff</color>
-    <color name="login_text_color">#0098f4</color>
+    <color name="login_text_color">#fff</color>
 
     <color name="card_background_color">#33343B</color>
     <color name="edit_text_color">#fff</color>

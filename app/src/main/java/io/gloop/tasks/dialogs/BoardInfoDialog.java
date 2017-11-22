@@ -33,7 +33,7 @@ import io.gloop.tasks.model.UserInfo;
 
 public class BoardInfoDialog {
 
-    public BoardInfoDialog(final @NonNull Context context, final GloopUser owner, final Task boardInfo, final UserInfo userInfo, final double x, final double y) {
+    public BoardInfoDialog(final @NonNull Context context, final GloopUser owner, final Task task, final UserInfo userInfo, final double x, final double y) {
         final View dialogView = View.inflate(context, R.layout.dialog_info, null);
 
         final Dialog dialog = new Dialog(context, R.style.MyAlertDialogStyle);
@@ -42,32 +42,32 @@ public class BoardInfoDialog {
 
 
         RelativeLayout layout = (RelativeLayout) dialog.findViewById(R.id.pop_stat_view);
-        layout.setBackgroundColor(boardInfo.getColor());
+        layout.setBackgroundColor(task.getColor());
 
         TextView tvBoardName = (TextView) dialog.findViewById(R.id.dialog_info_board_name);
-        tvBoardName.setText(boardInfo.getTitle());
+        tvBoardName.setText(task.getTitle());
 
         Switch switchPrivate = (Switch) dialog.findViewById(R.id.dialog_info_switch_private);
-        switchPrivate.setChecked(boardInfo.isPrivateTask());
-        if (!GloopPermission.hasPermission(boardInfo, GloopPermission.WRITE))
+        switchPrivate.setChecked(task.isPrivateTask());
+        if (!GloopPermission.hasPermission(task, GloopPermission.WRITE))
             switchPrivate.setEnabled(false);
         switchPrivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                boardInfo.setPrivateTask(isChecked);
-                boardInfo.saveInBackground();
+                task.setPrivateTask(isChecked);
+                task.saveInBackground();
             }
         });
 
         Switch switchFreeze = (Switch) dialog.findViewById(R.id.dialog_info_switch_freeze);
-        switchFreeze.setChecked(boardInfo.isFreezeTask());
-        if (!GloopPermission.hasPermission(boardInfo, GloopPermission.WRITE))
+        switchFreeze.setChecked(task.isFreezeTask());
+        if (!GloopPermission.hasPermission(task, GloopPermission.WRITE))
             switchFreeze.setEnabled(false);
         switchFreeze.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                boardInfo.setFreezeTask(isChecked);
-                boardInfo.saveInBackground();
+                task.setFreezeTask(isChecked);
+                task.saveInBackground();
             }
         });
 
@@ -81,7 +81,7 @@ public class BoardInfoDialog {
         qrCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new QRCodeDialog(context, boardInfo, qrCodeButton);
+                new QRCodeDialog(context, task, qrCodeButton);
                 revealShow(dialogView, false, dialog, x, y);
             }
         });
@@ -89,7 +89,7 @@ public class BoardInfoDialog {
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                share(context, owner.getName(), boardInfo);
+                share(context, owner.getName(), task);
 
                 revealShow(dialogView, false, dialog, x, y);
             }
@@ -119,7 +119,7 @@ public class BoardInfoDialog {
 //
 //                // delete task
 //                boardInfo.delete();
-//                task.delete();
+                task.delete();
 
                 revealShow(dialogView, false, dialog, x, y);
             }

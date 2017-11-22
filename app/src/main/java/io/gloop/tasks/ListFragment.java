@@ -17,12 +17,11 @@
 package io.gloop.tasks;
 
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,25 +37,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.gloop.Gloop;
 import io.gloop.GloopList;
-import io.gloop.exceptions.GloopException;
 import io.gloop.exceptions.GloopLoadException;
 import io.gloop.permissions.GloopUser;
-import io.gloop.tasks.dialogs.AcceptBoardAccessDialog;
 import io.gloop.tasks.dialogs.BoardInfoDialog;
-import io.gloop.tasks.model.TaskAccessRequest;
 import io.gloop.tasks.model.Task;
-import io.gloop.tasks.model.TaskGroup;
 import io.gloop.tasks.model.UserInfo;
 
 public class ListFragment extends Fragment {
@@ -72,8 +64,8 @@ public class ListFragment extends Fragment {
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    public static final int VIEW_MY_TASKS = 0;
-    public static final int VIEW_GROUPS = 1;
+    public static final int VIEW_OPEN_TASKS = 0;
+    public static final int VIEW_CLOSED_TASKS = 1;
 
     private int operation;
     private UserInfo userInfo;
@@ -146,7 +138,6 @@ public class ListFragment extends Fragment {
                         @Override
                         public void run() {
                             setupRecyclerView();
-                            checkForPrivateBoardAccessRequests();
                             running = false;
                         }
                     });
@@ -165,7 +156,6 @@ public class ListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         setupRecyclerView();
-        checkForPrivateBoardAccessRequests();
     }
 
     @Override
@@ -197,35 +187,35 @@ public class ListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void checkForPrivateBoardAccessRequests() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final GloopList<TaskAccessRequest> accessRequests = Gloop
-                            .all(TaskAccessRequest.class)
-                            .where()
-                            .equalsTo("boardCreator", owner.getUserId())
-                            .all();
-                    if (accessRequests != null) {
-                        for (final TaskAccessRequest accessRequest : accessRequests) {
-                            final FragmentActivity activity = getActivity();
-                            activity.runOnUiThread(
-                                    new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            new AcceptBoardAccessDialog(activity, accessRequest).show();
-                                        }
-                                    }
-                            );
-                        }
-                    }
-                } catch (GloopException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
+//    public void checkForPrivateBoardAccessRequests() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    final GloopList<TaskAccessRequest> accessRequests = Gloop
+//                            .all(TaskAccessRequest.class)
+//                            .where()
+//                            .equalsTo("boardCreator", owner.getUserId())
+//                            .all();
+//                    if (accessRequests != null) {
+//                        for (final TaskAccessRequest accessRequest : accessRequests) {
+//                            final FragmentActivity activity = getActivity();
+//                            activity.runOnUiThread(
+//                                    new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            new AcceptBoardAccessDialog(activity, accessRequest).show();
+//                                        }
+//                                    }
+//                            );
+//                        }
+//                    }
+//                } catch (GloopException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//    }
 
     // TODO impl
 //    private class LoadGroupsTask extends AsyncTask<Void, Integer, GloopList<TaskGroup>> {
@@ -272,7 +262,13 @@ public class ListFragment extends Fragment {
 
         @Override
         protected GloopList<Task> doInBackground(Void... urls) {
-            GloopList<Task> all = Gloop.all(Task.class);
+            GloopList<Task> all = null;
+            if (operation == VIEW_OPEN_TASKS)
+                all = Gloop.all(Task.class).where().equalsTo("done", false).all();
+            else
+                all = Gloop.all(Task.class).where().equalsTo("done", true).all();
+
+
             all.load();
             return all;
         }
@@ -292,39 +288,8 @@ public class ListFragment extends Fragment {
     }
 
 
-    private class LoadGroupsTask extends AsyncTask<Void, Integer, GloopList<TaskGroup>> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mSwipeRefreshLayout.setRefreshing(true);
-        }
-
-        @Override
-        protected GloopList<TaskGroup> doInBackground(Void... urls) {
-            GloopList<TaskGroup> all = Gloop.all(TaskGroup.class);
-            all.load();
-            return all;
-        }
-
-
-        @Override
-        protected void onPostExecute(GloopList<TaskGroup> groups) {
-            super.onPostExecute(groups);
-            try {
-                GroupAdapter groupAdapter = new GroupAdapter(groups);
-                recyclerView.setAdapter(groupAdapter);
-                mSwipeRefreshLayout.setRefreshing(false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private void setupRecyclerView() {
-        if (operation == VIEW_MY_TASKS)
-            new LoadTasksTask().execute();
-        else
-            new LoadGroupsTask().execute();
+        new LoadTasksTask().execute();
     }
 
     public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.BoardViewHolder> {
@@ -361,16 +326,23 @@ public class ListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final BoardViewHolder holder, int position) {
-            final Task boardInfo = list.get(position);
+            final Task task = list.get(position);
 
-            holder.mContentView.setText(boardInfo.getTitle());
-            final int color = boardInfo.getColor();
+            holder.mContentView.setText(task.getTitle());
+            final int color = task.getColor();
 
             holder.mImage.setBackgroundColor(color);
 
-//                holder.mView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(final View view) {
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    Context context = view.getContext();
+                    Intent intent = new Intent(context, TaskDetailActivity.class);
+                    intent.putExtra(TaskDetailFragment.ARG_BOARD, task);
+                    intent.putExtra(TaskDetailFragment.ARG_USER_INFO, userInfo);
+                    context.startActivity(intent);
+                }
+            });
 //                        holder.mView.setClickable(false);
 //                        holder.mView.setEnabled(false);
 //
@@ -416,55 +388,65 @@ public class ListFragment extends Fragment {
             holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    new BoardInfoDialog(context, owner, boardInfo, userInfo, 100.0, 100.0);
+
+                    int mWidth = getResources().getDisplayMetrics().widthPixels;
+                    int mHeight = getResources().getDisplayMetrics().heightPixels;
+
+
+                    new BoardInfoDialog(context, owner, task, userInfo, mHeight / 2, mWidth / 2);
                     setupRecyclerView();
                     return true;
                 }
             });
 
-//                if (userInfo.getFavoritesBoardId().contains(boardInfo.getBoardId())) {
-//                    holder.mFavorite.setImageResource(R.drawable.ic_star_black_24dp);
-//                    holder.mFavorite.setTag(SELECTED);
-//                }
-//                holder.mFavorite.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        if (holder.mFavorite.getTag().equals(NOT_SELECTED)) {
-//                            holder.mFavorite.setImageResource(R.drawable.ic_star_black_24dp);
-//                            holder.mFavorite.setTag(SELECTED);
-//                            userInfo.addFavoriteBoardId(boardInfo.getBoardId());
-//                        } else {
-//                            holder.mFavorite.setImageResource(R.drawable.ic_star_border_black_24dp);
-//                            holder.mFavorite.setTag(NOT_SELECTED);
-//                            userInfo.removeFavoriteBoardId(boardInfo.getBoardId());
-//                        }
-//                        userInfo.saveInBackground();
-//                    }
-//                });
+            if (task.isDone()) {
+                holder.mTaskDone.setColorFilter(getContext().getResources().getColor(R.color.Yellow));
+                holder.mTaskDone.setTag(SELECTED);
+            } else {
+                holder.mTaskDone.setColorFilter(getContext().getResources().getColor(R.color.Gray));
+                holder.mTaskDone.setTag(NOT_SELECTED);
+            }
+            holder.mTaskDone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (holder.mTaskDone.getTag().equals(NOT_SELECTED)) {
+                        holder.mTaskDone.setColorFilter(getContext().getResources().getColor(R.color.Yellow));
+                        holder.mTaskDone.setTag(SELECTED);
+                        task.setDone(true);
+                    } else {
+                        holder.mTaskDone.setColorFilter(getContext().getResources().getColor(R.color.Gray));
+                        holder.mTaskDone.setTag(NOT_SELECTED);
+                        task.setDone(false);
+                    }
+                    task.save();
+                    setupRecyclerView();
+                    userInfo.saveInBackground();
+                }
+            });
 
             // TODO impl
 //                setMemberImages(boardInfo, holder);
         }
 
-        private void setMemberImages(Task board, BoardViewHolder holder) {
-            int count = 0;
-            for (Map.Entry<String, String> entry : board.getTaskGroup().getMembers().entrySet()) {
-                if (entry.getValue() != null)
-                    Picasso.with(context)
-                            .load(Uri.parse(entry.getValue()))
-                            .into(holder.memberImages.get(count++));
-                else {
-                    holder.memberImages.get(count++).setImageResource(R.drawable.user_with_background);
-                }
-                if (count >= 4)
-                    break;
-            }
-            if (count < 4) {
-                for (int i = count; i < 4; i++) {
-                    holder.memberImages.get(i).setVisibility(View.GONE);
-                }
-            }
-        }
+//        private void setMemberImages(Task board, BoardViewHolder holder) {
+//            int count = 0;
+//            for (Map.Entry<String, String> entry : board.getTaskGroup().getMembers().entrySet()) {
+//                if (entry.getValue() != null)
+//                    Picasso.with(context)
+//                            .load(Uri.parse(entry.getValue()))
+//                            .into(holder.memberImages.get(count++));
+//                else {
+//                    holder.memberImages.get(count++).setImageResource(R.drawable.user_with_background);
+//                }
+//                if (count >= 4)
+//                    break;
+//            }
+//            if (count < 4) {
+//                for (int i = count; i < 4; i++) {
+//                    holder.memberImages.get(i).setVisibility(View.GONE);
+//                }
+//            }
+//        }
 
         @Override
         public int getItemCount() {
@@ -496,9 +478,9 @@ public class ListFragment extends Fragment {
         class BoardViewHolder extends RecyclerView.ViewHolder {
             final View mView;
             final TextView mContentView;
-            final TextView mLines;
+            //            final TextView mLines;
             final ImageView mImage;
-            final ImageView mFavorite;
+            final ImageView mTaskDone;
 
             final List<CircleImageView> memberImages = new ArrayList<>();
 
@@ -507,130 +489,9 @@ public class ListFragment extends Fragment {
                 super(view);
                 mView = view.findViewById(R.id.card_view);
                 mContentView = (TextView) view.findViewById(R.id.board_name);
-                mLines = (TextView) view.findViewById(R.id.lines);
+//                mLines = (TextView) view.findViewById(R.id.lines);
                 mImage = (ImageView) view.findViewById(R.id.avatar);
-                mFavorite = (ImageView) view.findViewById(R.id.board_favorite);
-
-                memberImages.add((CircleImageView) view.findViewById(R.id.user_image1));
-                memberImages.add((CircleImageView) view.findViewById(R.id.user_image2));
-                memberImages.add((CircleImageView) view.findViewById(R.id.user_image3));
-                memberImages.add((CircleImageView) view.findViewById(R.id.user_image4));
-            }
-
-            @Override
-            public String toString() {
-                return super.toString() + " '" + mContentView.getText() + "'";
-            }
-        }
-    }
-
-    public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
-
-        private ArrayList<TaskGroup> list;
-        private final GloopList<TaskGroup> originalList;
-
-        GroupAdapter(final GloopList<TaskGroup> groups) {
-            originalList = groups;
-            list = (ArrayList<TaskGroup>) groups.getLocalCopy();
-//            Collections.sort(list, Collections.reverseOrder(new Comparator<Task>() {
-//                @Override
-//                public int compare(Task left, Task right) {
-//                    return Long.compare(left.getTimestamp(), right.getTimestamp());
-//                }
-//            }));
-        }
-
-        @Override
-        public GroupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-            return new GroupViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final GroupViewHolder holder, int position) {
-            final TaskGroup group = list.get(position);
-
-            holder.mContentView.setText(group.getName());
-//            final int color = group.getColor();
-
-//            holder.mImage.setBackgroundColor(color);
-//            holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View view) {
-//                    new BoardInfoDialog(context, owner, group, userInfo, 100.0, 100.0);
-//                    setupRecyclerView();
-//                    return true;
-//                }
-//            });
-
-            // TODO impl
-//                setMemberImages(boardInfo, holder);
-        }
-
-        private void setMemberImages(Task board, GroupViewHolder holder) {
-            int count = 0;
-            for (Map.Entry<String, String> entry : board.getTaskGroup().getMembers().entrySet()) {
-                if (entry.getValue() != null)
-                    Picasso.with(context)
-                            .load(Uri.parse(entry.getValue()))
-                            .into(holder.memberImages.get(count++));
-                else {
-                    holder.memberImages.get(count++).setImageResource(R.drawable.user_with_background);
-                }
-                if (count >= 4)
-                    break;
-            }
-            if (count < 4) {
-                for (int i = count; i < 4; i++) {
-                    holder.memberImages.get(i).setVisibility(View.GONE);
-                }
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            try {
-                if (list != null)
-                    return list.size();
-                else
-                    return 0;
-            } catch (GloopLoadException e) {
-//                e.printStackTrace();
-                return 0;
-            }
-        }
-
-        void filter(String s) {
-            if (s.equals("")) {
-                list = (ArrayList<TaskGroup>) originalList.getLocalCopy();
-            } else {
-                String search = s.toLowerCase();
-                for (TaskGroup task : originalList) {
-                    if (!task.getName().toLowerCase().startsWith(search))
-                        list.remove(task);
-                }
-            }
-
-            notifyDataSetChanged();
-        }
-
-        class GroupViewHolder extends RecyclerView.ViewHolder {
-            final View mView;
-            final TextView mContentView;
-            final TextView mLines;
-            final ImageView mImage;
-            final ImageView mFavorite;
-
-            final List<CircleImageView> memberImages = new ArrayList<>();
-
-
-            GroupViewHolder(View view) {
-                super(view);
-                mView = view.findViewById(R.id.card_view);
-                mContentView = (TextView) view.findViewById(R.id.board_name);
-                mLines = (TextView) view.findViewById(R.id.lines);
-                mImage = (ImageView) view.findViewById(R.id.avatar);
-                mFavorite = (ImageView) view.findViewById(R.id.board_favorite);
+                mTaskDone = (ImageView) view.findViewById(R.id.task_done);
 
                 memberImages.add((CircleImageView) view.findViewById(R.id.user_image1));
                 memberImages.add((CircleImageView) view.findViewById(R.id.user_image2));
