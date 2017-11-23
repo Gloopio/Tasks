@@ -20,7 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.github.clans.fab.FloatingActionMenu;
+import com.github.clans.fab.FloatingActionButton;
 
 import java.util.Objects;
 
@@ -39,9 +39,9 @@ import io.gloop.tasks.utils.NameUtil;
  */
 public class NewTaskDialog {
 
-    private FloatingActionMenu fab;
+    private FloatingActionButton fab;
 
-    public NewTaskDialog(@NonNull final Context context, final GloopUser owner, final View view, final FragmentManager fragmentManager, FloatingActionMenu fab, final UserInfo userInfo) {
+    public NewTaskDialog(@NonNull final Context context, final GloopUser owner, final View view, final FragmentManager fragmentManager, FloatingActionButton fab, final UserInfo userInfo) {
         this.fab = fab;
 
         final View dialogView = View.inflate(context, R.layout.dialog_new_board, null);

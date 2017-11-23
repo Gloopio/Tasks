@@ -26,11 +26,11 @@
         <item
             android:id="@+id/nav_my_tasks"
             android:icon="@drawable/ic_assignment_black_24dp"
-            android:title="@string/my_tasks"/>
+            android:title="Open Tasks"/>
         <item
             android:id="@+id/nav_groups"
-            android:icon="@drawable/ic_star_border_black_24dp"
-            android:title="@string/groups"/>
+            android:icon="@drawable/ic_assignment_black_24dp"
+            android:title="Closed Tasks"/>
     </group>
 
     <group

@@ -26,7 +26,8 @@ public class TaskDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putSerializable(TaskDetailFragment.ARG_BOARD, getIntent().getSerializableExtra(TaskDetailFragment.ARG_BOARD));
+            if (getIntent().hasExtra(TaskDetailFragment.ARG_BOARD))
+                arguments.putSerializable(TaskDetailFragment.ARG_BOARD, getIntent().getSerializableExtra(TaskDetailFragment.ARG_BOARD));
             arguments.putSerializable(TaskDetailFragment.ARG_USER_INFO, getIntent().getSerializableExtra(TaskDetailFragment.ARG_USER_INFO));
             TaskDetailFragment fragment = new TaskDetailFragment();
             fragment.setArguments(arguments);

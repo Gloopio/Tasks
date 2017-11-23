@@ -83,44 +83,44 @@
                         <!--android:textSize="15sp"/>-->
 
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerInParent="true"
-                        android:paddingEnd="15dp">
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignParentRight="true"-->
+                        <!--android:layout_centerInParent="true"-->
+                        <!--android:paddingEnd="15dp">-->
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/user_image4"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginBottom="5dp"
-                            android:src="@drawable/user1"/>
+                        <!--<de.hdodenhof.circleimageview.CircleImageView-->
+                            <!--android:id="@+id/user_image4"-->
+                            <!--android:layout_width="25dp"-->
+                            <!--android:layout_height="25dp"-->
+                            <!--android:layout_marginBottom="5dp"-->
+                            <!--android:src="@drawable/user1"/>-->
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/user_image3"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginBottom="5dp"
-                            android:paddingStart="-3dp"
-                            android:src="@drawable/user2"/>
+                        <!--<de.hdodenhof.circleimageview.CircleImageView-->
+                            <!--android:id="@+id/user_image3"-->
+                            <!--android:layout_width="25dp"-->
+                            <!--android:layout_height="25dp"-->
+                            <!--android:layout_marginBottom="5dp"-->
+                            <!--android:paddingStart="-3dp"-->
+                            <!--android:src="@drawable/user2"/>-->
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/user_image2"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginBottom="5dp"
-                            android:paddingStart="-3dp"
-                            android:src="@drawable/user3"/>
+                        <!--<de.hdodenhof.circleimageview.CircleImageView-->
+                            <!--android:id="@+id/user_image2"-->
+                            <!--android:layout_width="25dp"-->
+                            <!--android:layout_height="25dp"-->
+                            <!--android:layout_marginBottom="5dp"-->
+                            <!--android:paddingStart="-3dp"-->
+                            <!--android:src="@drawable/user3"/>-->
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/user_image1"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginBottom="5dp"
-                            android:paddingStart="-3dp"
-                            android:src="@drawable/user_with_background"/>
-                    </LinearLayout>
+                        <!--<de.hdodenhof.circleimageview.CircleImageView-->
+                            <!--android:id="@+id/user_image1"-->
+                            <!--android:layout_width="25dp"-->
+                            <!--android:layout_height="25dp"-->
+                            <!--android:layout_marginBottom="5dp"-->
+                            <!--android:paddingStart="-3dp"-->
+                            <!--android:src="@drawable/user_with_background"/>-->
+                    <!--</LinearLayout>-->
 
                 </RelativeLayout>
 

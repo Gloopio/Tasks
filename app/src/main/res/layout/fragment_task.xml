@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="10dp"
         android:orientation="vertical">
 
 
@@ -18,11 +19,13 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
+        android:hint="Title"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="16dp"/>
 
     <EditText
         android:id="@+id/text"
+        android:hint="Notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"

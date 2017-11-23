@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2015 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package io.gloop.tasks;
 
 import android.content.Context;
@@ -60,7 +44,6 @@ public class ListFragment extends Fragment {
     private GloopUser owner;
     private TaskAdapter taskAdapter;
 
-    private TextView infoText;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -72,7 +55,6 @@ public class ListFragment extends Fragment {
 
     public static ListFragment newInstance(int operation, UserInfo userinfo, GloopUser owner) {
         ListFragment f = new ListFragment();
-        // Supply index input as an argument.
         Bundle args = new Bundle();
         args.putInt("operation", operation);
         args.putSerializable("userinfo", userinfo);
@@ -92,8 +74,6 @@ public class ListFragment extends Fragment {
         operation = args.getInt("operation", 0);
         userInfo = (UserInfo) args.getSerializable("userinfo");
         this.owner = (GloopUser) args.getSerializable("owner");
-
-        infoText = (TextView) rv.findViewById(R.id.fragment_list_info_text);
 
         recyclerView = (RecyclerView) rv.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
@@ -117,35 +97,12 @@ public class ListFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                update();
-
+                setupRecyclerView();
             }
         });
 
         return rv;
     }
-
-    private boolean running = false;
-
-    private void update() {
-        if (!running)
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    running = true;
-                    Gloop.sync();
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setupRecyclerView();
-                            running = false;
-                        }
-                    });
-
-                }
-            }).start();
-    }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -181,77 +138,11 @@ public class ListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                update();
+                setupRecyclerView();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
-
-//    public void checkForPrivateBoardAccessRequests() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    final GloopList<TaskAccessRequest> accessRequests = Gloop
-//                            .all(TaskAccessRequest.class)
-//                            .where()
-//                            .equalsTo("boardCreator", owner.getUserId())
-//                            .all();
-//                    if (accessRequests != null) {
-//                        for (final TaskAccessRequest accessRequest : accessRequests) {
-//                            final FragmentActivity activity = getActivity();
-//                            activity.runOnUiThread(
-//                                    new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            new AcceptBoardAccessDialog(activity, accessRequest).show();
-//                                        }
-//                                    }
-//                            );
-//                        }
-//                    }
-//                } catch (GloopException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-//    }
-
-    // TODO impl
-//    private class LoadGroupsTask extends AsyncTask<Void, Integer, GloopList<TaskGroup>> {
-//
-//        private String info = null;
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            mSwipeRefreshLayout.setRefreshing(true);
-//        }
-//
-//        @Override
-//        protected GloopList<TaskGroup> doInBackground(Void... urls) {
-//            return Gloop.all(TaskGroup.class);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(GloopList<TaskGroup> tasks) {
-//            super.onPostExecute(tasks);
-//            try {
-//                taskAdapter = new TaskAdapter(tasks);
-//                recyclerView.setAdapter(taskAdapter);
-//                mSwipeRefreshLayout.setRefreshing(false);
-//
-//                if (info != null) {
-//                    infoText.setText(info);
-//                } else {
-//                    infoText.setText("");
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
 
     private class LoadTasksTask extends AsyncTask<Void, Integer, GloopList<Task>> {
         @Override
@@ -267,7 +158,6 @@ public class ListFragment extends Fragment {
                 all = Gloop.all(Task.class).where().equalsTo("done", false).all();
             else
                 all = Gloop.all(Task.class).where().equalsTo("done", true).all();
-
 
             all.load();
             return all;
@@ -288,7 +178,7 @@ public class ListFragment extends Fragment {
     }
 
 
-    private void setupRecyclerView() {
+    public void setupRecyclerView() {
         new LoadTasksTask().execute();
     }
 
@@ -299,7 +189,6 @@ public class ListFragment extends Fragment {
 
         TaskAdapter(final GloopList<Task> tasks) {
             originalList = tasks;
-//                if (tasks.size() != 0) {
             list = (ArrayList<Task>) tasks.getLocalCopy();
             Collections.sort(list, Collections.reverseOrder(new Comparator<Task>() {
                 @Override
@@ -307,15 +196,6 @@ public class ListFragment extends Fragment {
                     return Long.compare(left.getTimestamp(), right.getTimestamp());
                 }
             }));
-//                }
-
-//            originalList.addOnChangeListener(new GloopOnChangeListener() {
-//                @Override
-//                public void onChange() {
-//                    list = (ArrayList<Task>) boards.getLocalCopy();
-//                    notifyDataSetChanged();
-//                }
-//            });
         }
 
         @Override
@@ -343,48 +223,7 @@ public class ListFragment extends Fragment {
                     context.startActivity(intent);
                 }
             });
-//                        holder.mView.setClickable(false);
-//                        holder.mView.setEnabled(false);
-//
-//                        new AsyncTask<Void, Void, Task>() {
-//
-//                            private ProgressDialog progress;
-//
-//                            @Override
-//                            protected void onPreExecute() {
-//                                super.onPreExecute();
-//                                progress = new ProgressDialog(context);
-//                                progress.setTitle(getString(R.string.loading));
-//                                progress.setMessage(getString(R.string.wait_while_loading_lines));
-//                                progress.setCancelable(false);
-//                                progress.show();
-//                            }
-//
-//                            @Override
-//                            protected Task doInBackground(Void... voids) {
-//                                return Gloop.all(Task.class)
-//                                        .where()
-//                                        .equalsTo(Constants.OBJECT_ID, boardInfo.getBoardId())
-//                                        .first();
-//                            }
-//
-//                            @Override
-//                            protected void onPostExecute(Task task) {
-//                                super.onPostExecute(task);
-//                                Context context = view.getContext();
-//                                Intent intent = new Intent(context, TaskDetailActivity.class);
-//                                intent.putExtra(TaskDetailFragment.ARG_BOARD, task);
-//                                intent.putExtra(TaskDetailFragment.ARG_USER_INFO, userInfo);
-//
-//                                context.startActivity(intent);
-//
-//                                progress.dismiss();
-//                                holder.mView.setClickable(true);
-//                                holder.mView.setEnabled(true);
-//                            }
-//                        }.execute();
-//                    }
-//                });
+
             holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -424,29 +263,7 @@ public class ListFragment extends Fragment {
                 }
             });
 
-            // TODO impl
-//                setMemberImages(boardInfo, holder);
         }
-
-//        private void setMemberImages(Task board, BoardViewHolder holder) {
-//            int count = 0;
-//            for (Map.Entry<String, String> entry : board.getTaskGroup().getMembers().entrySet()) {
-//                if (entry.getValue() != null)
-//                    Picasso.with(context)
-//                            .load(Uri.parse(entry.getValue()))
-//                            .into(holder.memberImages.get(count++));
-//                else {
-//                    holder.memberImages.get(count++).setImageResource(R.drawable.user_with_background);
-//                }
-//                if (count >= 4)
-//                    break;
-//            }
-//            if (count < 4) {
-//                for (int i = count; i < 4; i++) {
-//                    holder.memberImages.get(i).setVisibility(View.GONE);
-//                }
-//            }
-//        }
 
         @Override
         public int getItemCount() {
@@ -489,7 +306,6 @@ public class ListFragment extends Fragment {
                 super(view);
                 mView = view.findViewById(R.id.card_view);
                 mContentView = (TextView) view.findViewById(R.id.board_name);
-//                mLines = (TextView) view.findViewById(R.id.lines);
                 mImage = (ImageView) view.findViewById(R.id.avatar);
                 mTaskDone = (ImageView) view.findViewById(R.id.task_done);
 

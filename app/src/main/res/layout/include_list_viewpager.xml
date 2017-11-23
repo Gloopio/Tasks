@@ -23,10 +23,10 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:backgroundTint="@android:color/transparent"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
+                android:backgroundTint="@android:color/transparent"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
@@ -68,62 +68,67 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/fab_menu"
+    <!--<com.github.clans.fab.FloatingActionMenu-->
+    <!--android:id="@+id/fab_menu"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom|end"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_marginBottom="8dp"-->
+    <!--android:layout_marginEnd="8dp"-->
+    <!--fab:menu_labels_showAnimation="@anim/jump_from_down"-->
+    <!--fab:menu_labels_hideAnimation="@anim/jump_to_down"-->
+    <!--android:src="@drawable/ic_add_white_24dp"-->
+    <!--fab:menu_colorNormal="@color/colorPrimaryDark"-->
+    <!--fab:menu_colorPressed="@color/colorPrimaryDark"-->
+    <!--fab:menu_colorRipple="@color/colorPrimaryDark">-->
+
+    <!--<com.github.clans.fab.FloatingActionButton-->
+    <!--android:id="@+id/fab_menu_item_scan"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:src="@drawable/ic_qr_code_24dp"-->
+    <!--fab:fab_colorNormal="@color/colorPrimary"-->
+    <!--fab:fab_colorPressed="@color/colorPrimaryDark"-->
+    <!--fab:fab_label="Scan QR code of the task"-->
+    <!--fab:fab_size="mini"/>-->
+
+    <!--<com.github.clans.fab.FloatingActionButton-->
+    <!--android:id="@+id/fab_menu_item_search"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:src="@drawable/ic_search_white_24dp"-->
+    <!--fab:fab_colorNormal="@color/colorPrimary"-->
+    <!--fab:fab_colorPressed="@color/colorPrimaryDark"-->
+    <!--fab:fab_label="Search task by name"-->
+    <!--fab:fab_size="mini"/>-->
+
+    <!--<com.github.clans.fab.FloatingActionButton-->
+    <!--android:id="@+id/fab_menu_item_new_group"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:src="@drawable/ic_add_white_24dp"-->
+    <!--fab:fab_colorNormal="@color/colorPrimary"-->
+    <!--fab:fab_colorPressed="@color/colorPrimaryDark"-->
+    <!--fab:fab_label="Create new group"-->
+    <!--fab:fab_size="mini"/>-->
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fab_menu_item_new"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|end"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        fab:menu_labels_showAnimation="@anim/jump_from_down"
-        fab:menu_labels_hideAnimation="@anim/jump_to_down"
         android:src="@drawable/ic_add_white_24dp"
-        fab:menu_colorNormal="@color/colorPrimaryDark"
-        fab:menu_colorPressed="@color/colorPrimaryDark"
-        fab:menu_colorRipple="@color/colorPrimaryDark">
+        fab:fab_colorNormal="@color/colorPrimaryDark"
+        fab:fab_colorPressed="@color/colorPrimary"
+        fab:fab_label="Create new task"
+        />
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_menu_item_scan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_qr_code_24dp"
-            fab:fab_colorNormal="@color/colorPrimary"
-            fab:fab_colorPressed="@color/colorPrimaryDark"
-            fab:fab_label="Scan QR code of the task"
-            fab:fab_size="mini"/>
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_menu_item_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_search_white_24dp"
-            fab:fab_colorNormal="@color/colorPrimary"
-            fab:fab_colorPressed="@color/colorPrimaryDark"
-            fab:fab_label="Search task by name"
-            fab:fab_size="mini"/>
-
-        <!--<com.github.clans.fab.FloatingActionButton-->
-            <!--android:id="@+id/fab_menu_item_new_group"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/ic_add_white_24dp"-->
-            <!--fab:fab_colorNormal="@color/colorPrimary"-->
-            <!--fab:fab_colorPressed="@color/colorPrimaryDark"-->
-            <!--fab:fab_label="Create new group"-->
-            <!--fab:fab_size="mini"/>-->
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_menu_item_new"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_white_24dp"
-            fab:fab_colorNormal="@color/colorPrimary"
-            fab:fab_colorPressed="@color/colorPrimaryDark"
-            fab:fab_label="Create new task"
-            fab:fab_size="mini"/>
-
-    </com.github.clans.fab.FloatingActionMenu>
+    <!--</com.github.clans.fab.FloatingActionMenu>-->
 
 </android.support.design.widget.CoordinatorLayout>
