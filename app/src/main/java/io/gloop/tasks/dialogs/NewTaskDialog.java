@@ -34,6 +34,10 @@ import io.gloop.tasks.model.UserInfo;
 import io.gloop.tasks.utils.ColorUtil;
 import io.gloop.tasks.utils.NameUtil;
 
+import static io.gloop.permissions.GloopPermission.PUBLIC;
+import static io.gloop.permissions.GloopPermission.READ;
+import static io.gloop.permissions.GloopPermission.WRITE;
+
 /**
  * Created by Alex Untertrifaller on 09.06.17.
  */
@@ -103,7 +107,7 @@ public class NewTaskDialog {
 
                         // create new task
                         final Task task = new Task();
-                        task.setUser(group.getObjectId());
+                        task.setUser(group.getObjectId(), PUBLIC | READ | WRITE);
 
                         // set color
                         if (!Objects.equals(etBoardName.getText().toString(), ""))

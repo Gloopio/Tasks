@@ -148,6 +148,10 @@ public class ListFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            if (mSwipeRefreshLayout == null) {
+                mSwipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout);
+                mSwipeRefreshLayout.setColorSchemeResources(R.color.color1, R.color.color2, R.color.color3, R.color.color4, R.color.color5, R.color.color6);
+            }
             mSwipeRefreshLayout.setRefreshing(true);
         }
 

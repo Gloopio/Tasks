@@ -5,8 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
 
 
     <application
@@ -98,9 +98,6 @@
         <meta-data
             android:name="io.gloop.ApiKey"
             android:value="f1bdfa56-a26d-4346-8b41-a8d65b4fcc4a"/>
-        <!--<meta-data-->
-        <!--android:name="io.gloop.Host"-->
-        <!--android:value="192.168.0.87:8080"/>-->
 
         <meta-data
             android:name="io.fabric.ApiKey"

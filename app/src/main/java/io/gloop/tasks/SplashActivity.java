@@ -11,7 +11,6 @@ import com.google.android.gms.analytics.Tracker;
 
 import io.fabric.sdk.android.Fabric;
 import io.gloop.Gloop;
-import io.gloop.tasks.utils.BackgroundService;
 import io.gloop.tasks.utils.SharedPreferencesStore;
 
 public class SplashActivity extends Activity {
@@ -37,9 +36,6 @@ public class SplashActivity extends Activity {
         Fabric.with(this, new Crashlytics());
 //        FacebookSdk.sdkInitialize(getApplicationContext());
         SharedPreferencesStore.setContext(getBaseContext());
-
-        // setup screen util at start
-        BackgroundService.init();
 
         if (SharedPreferencesStore.isFirstStart())
             showIntroOnFirstRun();

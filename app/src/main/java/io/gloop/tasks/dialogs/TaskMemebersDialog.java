@@ -1,16 +1,23 @@
 package io.gloop.tasks.dialogs;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
+import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -20,8 +27,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -73,15 +81,28 @@ public class TaskMemebersDialog {
         recyclerView.setAdapter(adapter);
 
 
-        final EditText newMember = (EditText) dialog.findViewById(R.id.member_new);
+        final AutoCompleteTextView newMember = (AutoCompleteTextView) dialog.findViewById(R.id.member_new);
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+        } else {
+            ContentResolver content = activity.getContentResolver();
+            Cursor cursor = content.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, null, null, null);
+            final ContactListAdapter adapter = new ContactListAdapter(activity, cursor, true);
+            newMember.setThreshold(0);
+            newMember.setAdapter(adapter);
+        }
+
+//        final EditText newMember = (EditText) dialog.findViewById(R.id.member_new);
         Button addMember = (Button) dialog.findViewById(R.id.member_add);
         addMember.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 String memberId = newMember.getText().toString();
-                group.addMember(memberId);
-                group.save();
-                adapter.notifyDataSetChanged();
+                if (!memberId.equals("")) {
+                    group.addMember(memberId);
+                    group.save();
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
 
@@ -118,7 +139,7 @@ public class TaskMemebersDialog {
         private GloopGroup group;
 
         // data is passed into the constructor
-        public MyRecyclerViewAdapter(Context context, List<String> data, GloopGroup group) {
+        MyRecyclerViewAdapter(Context context, List<String> data, GloopGroup group) {
             this.mInflater = LayoutInflater.from(context);
             this.mData = data;
             this.group = group;
@@ -133,7 +154,7 @@ public class TaskMemebersDialog {
 
         // binds the data to the textview in each row
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, int position) {
             final String memberId = mData.get(position);
             holder.myTextView.setText(memberId);
             holder.removeMember.setOnClickListener(new OnClickListener() {
@@ -142,6 +163,7 @@ public class TaskMemebersDialog {
                     group.getMembers().remove(memberId);
                     group.save();
                     adapter.notifyDataSetChanged();
+                    holder.myTextView.setText("");
                 }
             });
         }
@@ -163,10 +185,6 @@ public class TaskMemebersDialog {
                 myTextView = (TextView) itemView.findViewById(R.id.tvAnimalName);
                 removeMember = (ImageView) itemView.findViewById(R.id.member_remove);
             }
-        }
-
-        public String getItem(int id) {
-            return mData.get(id);
         }
     }
 
@@ -248,5 +266,63 @@ public class TaskMemebersDialog {
         } catch (Exception ex) {
             GloopLogger.e("Was not able to restart application");
         }
+    }
+
+    class ContactListAdapter extends CursorAdapter implements Filterable {
+        private ContentResolver mCR;
+
+        ContactListAdapter(Context context, Cursor c, boolean a) {
+            super(context, c, true);
+            mCR = context.getContentResolver();
+        }
+
+
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+            final int emailIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
+            ((TextView) view).setText(cursor.getString(emailIndex));
+        }
+
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup parent) {
+            final LayoutInflater inflater = LayoutInflater.from(context);
+            final TextView view = (TextView) inflater.inflate(android.R.layout.simple_dropdown_item_1line, parent, false);
+
+
+            final int emailIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
+            view.setText(cursor.getString(emailIndex));
+
+            return view;
+
+        }
+
+        @Override
+        public String convertToString(Cursor cursor) {
+            final int emailIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
+            return cursor.getString(emailIndex);
+        }
+
+        @Override
+        public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
+            if (getFilterQueryProvider() != null) {
+                return getFilterQueryProvider().runQuery(constraint);
+            }
+
+            String query = constraint.toString();
+
+            final String selection = ContactsContract.Contacts.DISPLAY_NAME
+                    + " LIKE ? "
+                    + " OR "
+                    + ContactsContract.CommonDataKinds.Email.ADDRESS
+                    + " LIKE ? ";
+
+            String[] selectionArgs = new String[]{"%" + query + "%"
+                    , "%" + query + "%"};
+
+            return mCR.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, selection, selectionArgs, null);
+
+        }
+
     }
 }
