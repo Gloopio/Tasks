@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.ContactsContract;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.CursorAdapter;
@@ -33,6 +34,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,12 +49,12 @@ import io.gloop.tasks.model.UserInfo;
  * Created by Alex Untertrifaller on 21.09.17.
  */
 
-public class TaskMemebersDialog {
+public class TaskMembersDialog {
 
     private Activity activity;
     private MyRecyclerViewAdapter adapter;
 
-    public TaskMemebersDialog(Activity activity, UserInfo userInfo, Task task) {
+    public TaskMembersDialog(Activity activity, UserInfo userInfo, Task task) {
         this.activity = activity;
         final View dialogView = View.inflate(activity, R.layout.dialog_task_members, null);
 
@@ -71,65 +73,76 @@ public class TaskMemebersDialog {
         // load members of task
         String groupId = task.getGloopUser();
         final GloopGroup group = Gloop.all(GloopGroup.class).where().equalsTo("objectId", groupId).first();
-        List<String> members = group.getMembers();
+        if (group != null) {
+
+            List<String> members;
+            if (group != null)
+                members = group.getMembers();
+            else
+                members = new ArrayList<>();
 
 
-        // set up the RecyclerView
-        final RecyclerView recyclerView = (RecyclerView) dialog.findViewById(R.id.member_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        adapter = new MyRecyclerViewAdapter(activity, members, group);
-        recyclerView.setAdapter(adapter);
+            // set up the RecyclerView
+            final RecyclerView recyclerView = (RecyclerView) dialog.findViewById(R.id.member_list);
+            recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+            adapter = new MyRecyclerViewAdapter(activity, members, group);
+            recyclerView.setAdapter(adapter);
 
 
-        final AutoCompleteTextView newMember = (AutoCompleteTextView) dialog.findViewById(R.id.member_new);
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+            final AutoCompleteTextView newMember = (AutoCompleteTextView) dialog.findViewById(R.id.member_new);
+            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+            } else {
+                ContentResolver content = activity.getContentResolver();
+                Cursor cursor = content.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, null, null, null);
+                final ContactListAdapter adapter = new ContactListAdapter(activity, cursor, true);
+                newMember.setThreshold(0);
+                newMember.setAdapter(adapter);
+            }
+
+            Button addMember = (Button) dialog.findViewById(R.id.member_add);
+            addMember.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String memberId = newMember.getText().toString();
+                    if (!memberId.equals("")) {
+                        group.addMember(memberId);
+                        group.save();
+                        adapter.notifyDataSetChanged();
+                        newMember.setText("");
+                    }
+                }
+            });
+
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
+                    revealShow(dialogView, true, null);
+                }
+            });
+
+            dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                    if (i == KeyEvent.KEYCODE_BACK) {
+
+                        revealShow(dialogView, false, dialog);
+                        return true;
+                    }
+
+                    return false;
+                }
+            });
+
+            if (dialog.getWindow() != null)
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+            dialog.show();
         } else {
-            ContentResolver content = activity.getContentResolver();
-            Cursor cursor = content.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, null, null, null);
-            final ContactListAdapter adapter = new ContactListAdapter(activity, cursor, true);
-            newMember.setThreshold(0);
-            newMember.setAdapter(adapter);
+            Snackbar.make(activity.findViewById(R.id.item_detail_root), "Only the owner is allowed to add new members",
+                    Snackbar.LENGTH_SHORT)
+                    .show();
         }
-
-//        final EditText newMember = (EditText) dialog.findViewById(R.id.member_new);
-        Button addMember = (Button) dialog.findViewById(R.id.member_add);
-        addMember.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String memberId = newMember.getText().toString();
-                if (!memberId.equals("")) {
-                    group.addMember(memberId);
-                    group.save();
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        });
-
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                revealShow(dialogView, true, null);
-            }
-        });
-
-        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
-                if (i == KeyEvent.KEYCODE_BACK) {
-
-                    revealShow(dialogView, false, dialog);
-                    return true;
-                }
-
-                return false;
-            }
-        });
-
-        if (dialog.getWindow() != null)
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        dialog.show();
     }
 
     public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {

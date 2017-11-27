@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/login_layout"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@drawable/splashscreen_background"
@@ -8,7 +9,6 @@
               android:orientation="vertical"
               android:paddingLeft="@dimen/activity_horizontal_margin"
               android:paddingRight="@dimen/activity_horizontal_margin"
-              android:id="@+id/login_layout"
               tools:context="io.gloop.tasks.LoginActivity">
 
 
@@ -31,20 +31,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="vertical"
             android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textView"
-                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:textSize="60sp"
                 android:layout_marginBottom="20sp"
-                android:textColor="@android:color/white"
                 android:layout_weight="1"
-                android:text="Tasks"/>
+                android:gravity="center"
+                android:text="Tasks"
+                android:textColor="@android:color/white"
+                android:textSize="60sp"/>
 
 
             <!--<TextView-->
@@ -144,24 +144,44 @@
                     <com.google.android.gms.common.SignInButton
                         android:id="@+id/google_sign_in_button"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="45dp"
                         android:layout_marginTop="-3dp"
                         android:layout_weight="1"/>
 
-                    <!--<com.facebook.login.widget.LoginButton-->
-                        <!--android:id="@+id/facebook_login_button"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="50dp"-->
-                        <!--android:paddingTop="11dp"-->
-                        <!--android:paddingBottom="11dp"-->
-                        <!--android:paddingLeft="12dp"-->
-                        <!--android:layout_marginLeft="3dp"-->
-                        <!--android:layout_marginRight="3dp"-->
+                    <com.facebook.login.widget.LoginButton
+                        android:id="@+id/facebook_login_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
+                        android:paddingLeft="12dp"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
 
-                        <!--android:layout_gravity="center_horizontal"-->
-                        <!--android:layout_weight="1"/>-->
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1"/>
 
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="OR"/>
+
+                <Button
+                    android:id="@+id/skip_button"
+                    style="?android:textAppearanceSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/login_button_background"
+                    android:text="Skip"
+                    android:textColor="@color/login_button_text_color"
+                    android:textStyle="bold"/>
+
+
             </LinearLayout>
 
         </LinearLayout>

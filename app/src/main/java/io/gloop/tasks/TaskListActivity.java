@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -21,7 +22,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -54,6 +57,8 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     private ViewPager viewPager;
     private CircleImageView navHeaderUserImage;
     private FloatingActionButton floatingActionButton;
+    private LinearLayout header;
+    private AppBarLayout appBar;
 
 
     private GloopUser owner;
@@ -103,6 +108,17 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+
+        appBar = (AppBarLayout) findViewById(R.id.appbar);
+        header = (LinearLayout) findViewById(R.id.header);
+//        if (userInfo == null) {
+//            ViewGroup.LayoutParams params = header.getLayoutParams();
+//            params.height = 100;
+////            params.width = 100;
+//            header.setLayoutParams(params);
+//        }
+
 
         username = (TextView) findViewById(R.id.username);
         View navigationHeader = navigationView.getHeaderView(0);
@@ -255,7 +271,6 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void setUserInfo() {
-
         if (userInfo != null) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -269,12 +284,34 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
                         Picasso.with(getApplicationContext())
                                 .load(imageURL)
                                 .into(navHeaderUserImage);
+                    } else {
+                        userImage.setVisibility(View.GONE);
+                        navHeaderUserImage.setVisibility(View.GONE);
                     }
 
-                    username.setText(userInfo.getUserName());
-                    navHeaderUsername.setText(userInfo.getUserName());
+                    if (userInfo.getUserName() == null || userInfo.getUserName().equals("")) {
+                        username.setVisibility(View.GONE);
+                        navHeaderUsername.setVisibility(View.GONE);
+                    } else {
+                        username.setText(userInfo.getUserName());
+                        navHeaderUsername.setText(userInfo.getUserName());
+                    }
                 }
             });
+        } else {
+            ViewGroup.LayoutParams layoutParams = appBar.getLayoutParams();
+            layoutParams.height = 175;
+            appBar.setLayoutParams(layoutParams);
+
+//            ViewGroup.LayoutParams params = header.getLayoutParams();
+            header.setVisibility(View.GONE);
+//            params.height = 0;
+//            header.setLayoutParams(params);
+
+            userImage.setVisibility(View.GONE);
+            username.setVisibility(View.GONE);
+            navHeaderUsername.setVisibility(View.GONE);
+            navHeaderUserImage.setVisibility(View.GONE);
         }
     }
 

@@ -1,6 +1,7 @@
 package io.gloop.tasks;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import io.gloop.Gloop;
 import io.gloop.permissions.GloopGroup;
-import io.gloop.tasks.dialogs.TaskMemebersDialog;
+import io.gloop.permissions.GloopPermission;
+import io.gloop.tasks.dialogs.TaskMembersDialog;
 import io.gloop.tasks.model.Task;
 import io.gloop.tasks.model.UserInfo;
 import io.gloop.tasks.utils.ColorUtil;
@@ -43,7 +46,10 @@ public class TaskDetailFragment extends Fragment {
         else {
             // create a group
             GloopGroup group = new GloopGroup();
-            group.addMember(userInfo.getEmail());
+            if (userInfo != null)
+                group.addMember(userInfo.getEmail());
+            else
+                group.addMember(Gloop.getOwner().getUserId());
             group.save();
 
             // create new task
@@ -87,12 +93,18 @@ public class TaskDetailFragment extends Fragment {
                 break;
 
             case R.id.action_members:
-                new TaskMemebersDialog(getActivity(), userInfo, task);
+                new TaskMembersDialog(getActivity(), userInfo, task);
                 break;
 
             case R.id.action_delete:
-                task.delete();
-                getActivity().finish();
+                if (task.getPermission() != GloopPermission.WRITE)
+                    Snackbar.make(getActivity().findViewById(R.id.item_detail_root), "Your not allowed to delete the task.",
+                            Snackbar.LENGTH_SHORT)
+                            .show();
+                else {
+                    task.delete();
+                    getActivity().finish();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

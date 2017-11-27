@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -21,6 +22,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -28,14 +36,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.UUID;
+
 import io.gloop.Gloop;
+import io.gloop.GloopLogger;
 import io.gloop.exceptions.GloopUserAlreadyExistsException;
 import io.gloop.tasks.model.UserInfo;
 import io.gloop.tasks.utils.SharedPreferencesStore;
-
-//import com.facebook.CallbackManager;
-//import com.google.android.gms.auth.api.Auth;
-//import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
 /**
  * A login screen that offers login via email/password.
@@ -50,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private View mProgressView;
     private View mLoginFormView;
     private GoogleApiClient mGoogleApiClient;
-//    private CallbackManager callbackManager;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,112 +95,122 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
+        Button skipButton = (Button) findViewById(R.id.skip_button);
+        skipButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // generate user
+                String username = UUID.randomUUID().toString();
+                String password = UUID.randomUUID().toString();
+                if (Gloop.register(username, password)) {
+
+                    SharedPreferencesStore.setUser(username, password);
+
+                    Intent i = new Intent(getApplicationContext(), TaskListActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+            }
+        });
+
         setUpGoogleAuthentication();
-//
-//        setUpFacebookAuthentication();
+
+        setUpFacebookAuthentication();
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     }
 
 
-//    private void setUpFacebookAuthentication() {
-//        callbackManager = CallbackManager.Factory.create();
-//
-//        final LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
-//        loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
-//
-//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(final LoginResult loginResult) {
-//                Log.d("Gloop", loginResult.toString());
-//
-//                GraphRequest request = GraphRequest.newMeRequest(
-//                        loginResult.getAccessToken(),
-//                        new GraphRequest.GraphJSONObjectCallback() {
-//                            @Override
-//                            public void onCompleted(JSONObject object, GraphResponse response) {
-//                                Log.v("LoginActivity", response.toString());
-//
-//                                // Application code
-//                                try {
-//                                    String email = object.getString("email");
-//                                    String name = object.getString("name");
-//
-//
-//                                    String password = loginResult.getAccessToken().getUserId();
-//
-//                                    UserInfo userInfo = Gloop.all(UserInfo.class).where().equalsTo("email", email).first();
-//                                    if (userInfo != null) {
-//                                        userInfo.setEmail(email);
-//                                        userInfo.setUserName(name);
-//                                        userInfo.setImageURL(Uri.parse("https://graph.facebook.com/" + loginResult.getAccessToken().getUserId() + "/picture?type=large"));
-//                                        userInfo.save();
-//                                    } else {
-//                                        userInfo = new UserInfo();
-//                                        userInfo.setEmail(email);
-//                                        userInfo.setUserName(name);
-//                                        userInfo.setImageURL(Uri.parse("https://graph.facebook.com/" + loginResult.getAccessToken().getUserId() + "/picture?type=large"));
-//                                        userInfo.save();
-//                                    }
-//
-//
-//                                    if (Gloop.login(email, password)) {
-//                                        // keep user logged in
-//                                        SharedPreferencesStore.setUser(email, password);
-//
-//                                        Answers.getInstance().logLogin(new LoginEvent()
-//                                                .putMethod("Digits")
-//                                                .putSuccess(true));
-//
-//                                        showProgress(false);
-//
-//                                        Intent i = new Intent(getApplicationContext(), TaskListActivity.class);
-//                                        startActivity(i);
-//                                        finish();
-//                                    } else {
-//                                        try {
-//                                            if (Gloop.register(email, password)) {
-//
-//                                                SharedPreferencesStore.setUser(email, password);
-//
-//                                                Answers.getInstance().logSignUp(new SignUpEvent()
-//                                                        .putMethod("Digits")
-//                                                        .putSuccess(true));
-//
-//                                                Intent i = new Intent(getApplicationContext(), TaskListActivity.class);
-//                                                startActivity(i);
-//                                                finish();
-//                                            }
-//                                        } catch (GloopUserAlreadyExistsException e) {
-//                                            Snackbar.make(findViewById(R.id.login_layout), R.string.user_already_exists, Snackbar.LENGTH_LONG).show();
-//                                        }
-//                                    }
-//
-//
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                }
-//
-//                            }
-//                        });
-//                Bundle parameters = new Bundle();
-//                parameters.putString("fields", "id,name,email");
-//                request.setParameters(parameters);
-//                request.executeAsync();
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//            }
-//
-//            @Override
-//            public void onError(FacebookException e) {
-//                e.printStackTrace();
-//                GloopLogger.e(e);
-//            }
-//        });
-//    }
+    private void setUpFacebookAuthentication() {
+        callbackManager = CallbackManager.Factory.create();
+
+        final LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
+
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(final LoginResult loginResult) {
+                Log.d("Gloop", loginResult.toString());
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                Log.v("LoginActivity", response.toString());
+
+                                // Application code
+                                try {
+                                    String email = object.getString("email");
+                                    String name = object.getString("name");
+
+
+                                    String password = loginResult.getAccessToken().getUserId();
+
+                                    UserInfo userInfo = Gloop.all(UserInfo.class).where().equalsTo("email", email).first();
+                                    if (userInfo != null) {
+                                        userInfo.setEmail(email);
+                                        userInfo.setUserName(name);
+                                        userInfo.setImageURL(Uri.parse("https://graph.facebook.com/" + loginResult.getAccessToken().getUserId() + "/picture?type=large"));
+                                        userInfo.save();
+                                    } else {
+                                        userInfo = new UserInfo();
+                                        userInfo.setEmail(email);
+                                        userInfo.setUserName(name);
+                                        userInfo.setImageURL(Uri.parse("https://graph.facebook.com/" + loginResult.getAccessToken().getUserId() + "/picture?type=large"));
+                                        userInfo.save();
+                                    }
+
+
+                                    if (Gloop.login(email, password)) {
+                                        // keep user logged in
+                                        SharedPreferencesStore.setUser(email, password);
+
+                                        showProgress(false);
+
+                                        Intent i = new Intent(getApplicationContext(), TaskListActivity.class);
+                                        startActivity(i);
+                                        finish();
+                                    } else {
+                                        try {
+                                            if (Gloop.register(email, password)) {
+
+                                                SharedPreferencesStore.setUser(email, password);
+
+                                                Intent i = new Intent(getApplicationContext(), TaskListActivity.class);
+                                                startActivity(i);
+                                                finish();
+                                            }
+                                        } catch (GloopUserAlreadyExistsException e) {
+                                            Snackbar.make(findViewById(R.id.login_layout), R.string.user_already_exists, Snackbar.LENGTH_LONG).show();
+                                        }
+                                    }
+
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email");
+                request.setParameters(parameters);
+                request.executeAsync();
+            }
+
+            @Override
+            public void onCancel() {
+            }
+
+            @Override
+            public void onError(FacebookException e) {
+                e.printStackTrace();
+                GloopLogger.e(e);
+            }
+        });
+    }
 
 
     private void setUpGoogleAuthentication() {
@@ -241,7 +262,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             handleSignInResult(result);
         }
 
-//        callbackManager.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
