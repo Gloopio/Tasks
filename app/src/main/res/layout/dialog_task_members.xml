@@ -32,16 +32,16 @@
             android:orientation="vertical"
             app:layout_scrollFlags="scroll|enterAlways|snap">
 
-           <AutoCompleteTextView
-               android:id="@+id/member_new"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"/>
+            <AutoCompleteTextView
+                android:id="@+id/member_new"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <Button
                 android:id="@+id/member_add"
-                android:text="Add"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@string/add"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/member_list"

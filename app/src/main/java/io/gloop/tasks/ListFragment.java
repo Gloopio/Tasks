@@ -31,7 +31,7 @@ import io.gloop.Gloop;
 import io.gloop.GloopList;
 import io.gloop.exceptions.GloopLoadException;
 import io.gloop.permissions.GloopUser;
-import io.gloop.tasks.dialogs.BoardInfoDialog;
+import io.gloop.tasks.dialogs.TaskInfoDialog;
 import io.gloop.tasks.model.Task;
 import io.gloop.tasks.model.UserInfo;
 
@@ -155,7 +155,6 @@ public class ListFragment extends Fragment {
                     mSwipeRefreshLayout.setRefreshing(true);
                 }
             }
-
         }
 
         @Override
@@ -241,7 +240,7 @@ public class ListFragment extends Fragment {
                     int mHeight = getResources().getDisplayMetrics().heightPixels;
 
 
-                    new BoardInfoDialog(context, owner, task, userInfo, mHeight / 2, mWidth / 2);
+                    new TaskInfoDialog(context, owner, task, userInfo, mHeight / 2, mWidth / 2);
                     setupRecyclerView();
                     return true;
                 }
@@ -268,7 +267,8 @@ public class ListFragment extends Fragment {
                     }
                     task.save();
                     setupRecyclerView();
-                    userInfo.saveInBackground();
+                    if (userInfo != null)
+                        userInfo.saveInBackground();
                 }
             });
 
@@ -304,7 +304,6 @@ public class ListFragment extends Fragment {
         class BoardViewHolder extends RecyclerView.ViewHolder {
             final View mView;
             final TextView mContentView;
-            //            final TextView mLines;
             final ImageView mImage;
             final ImageView mTaskDone;
 

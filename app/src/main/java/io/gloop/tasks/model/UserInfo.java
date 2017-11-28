@@ -19,7 +19,6 @@ public class UserInfo extends GloopObject {
     private List<String> favoriesBoardId = new ArrayList<>();
 
     public UserInfo() {
-
     }
 
     public String getEmail() {

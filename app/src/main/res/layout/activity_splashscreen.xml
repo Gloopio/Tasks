@@ -3,16 +3,9 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:padding="80dp"
               android:orientation="vertical"
+              android:padding="80dp"
               tools:context="io.gloop.tasks.SplashActivity">
-
-    <!--<ImageView-->
-        <!--android:id="@+id/splashscreen"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="fill_parent"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:src="@drawable/logo_new_1"/>-->
 
     <ImageView
         android:layout_width="wrap_content"

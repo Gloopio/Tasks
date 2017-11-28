@@ -37,77 +37,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="10dp"
-            android:paddingTop="26dp">
-
-            <Switch
-                android:id="@+id/dialog_info_switch_private"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/private_label"
-                android:textColor="@color/textColor"
-                android:textSize="18sp"/>
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/only_approved_drawers_can_view_this_board"
-                android:textColor="@color/textColor"
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="16dp">
-
-            <Switch
-                android:id="@+id/dialog_info_switch_freeze"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/freeze"
-                android:textColor="@color/textColor"
-                android:textSize="18sp"/>
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/only_i_can_edit_this_board"
-                android:textColor="@color/textColor"
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_marginTop="20dp">
 
             <Button
-                android:id="@+id/dialog_info_btn_share"
+                android:id="@+id/dialog_info_btn_add_member"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="4"
                 android:background="@drawable/button"
-                android:text="@string/share"
-                android:textColor="@color/popupButtonForeground"/>
-
-            <ImageButton
-                android:id="@+id/dialog_info_btn_qr"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/button"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_qr_code"
-                android:tint="@color/popupButtonForeground"
-                android:text="@string/delete"
+                android:text="@string/members"
                 android:textColor="@color/popupButtonForeground"/>
         </LinearLayout>
 

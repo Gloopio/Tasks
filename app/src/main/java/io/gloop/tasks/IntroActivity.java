@@ -20,20 +20,20 @@ public class IntroActivity extends AppIntro {
         // Just set a title, description, background and image. AppIntro will do the rest.
         // addSlide(AppIntroFragment.newInstance(title, description, image, backgroundColor));
         // TODO set real content
-        addSlide(AppIntroFragment.newInstance("Draw",
-                "Create a board and start drawing with your fingers.",
-                R.drawable.intro_pencil,
+        addSlide(AppIntroFragment.newInstance("Tasks",
+                "Organize yourself by creating task.",
+                R.drawable.intro_task,
                 getResources().getColor(R.color.intro_1)));
 
-        addSlide(AppIntroFragment.newInstance("Work Together",
-                "Draw amazing boards together with your friends.",
-                R.drawable.intro_share,
+        addSlide(AppIntroFragment.newInstance("Collaborate",
+                "Work together on tasks.",
+                R.drawable.intro_collaborate,
                 getResources().getColor(R.color.intro_2)));
 
-        addSlide(AppIntroFragment.newInstance("Public Boards",
-                "Make your boards accessible to the wide world. Let everyone contribute to your board.",
-                R.drawable.intro_public,
-                getResources().getColor(R.color.intro_3)));
+//        addSlide(AppIntroFragment.newInstance("Public Boards",
+//                "Make your boards accessible to the wide world. Let everyone contribute to your board.",
+//                R.drawable.intro_public,
+//                getResources().getColor(R.color.intro_3)));
 
         // OPTIONAL METHODS
         // Override bar/separator color.

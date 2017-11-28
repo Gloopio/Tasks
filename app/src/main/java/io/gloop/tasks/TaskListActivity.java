@@ -28,8 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -58,6 +56,7 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
     private CircleImageView navHeaderUserImage;
     private FloatingActionButton floatingActionButton;
     private LinearLayout header;
+    private LinearLayout navHeader;
     private AppBarLayout appBar;
 
 
@@ -69,12 +68,6 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-
-        TasksApplication application = (TasksApplication) getApplication();
-        Tracker mTracker = application.getDefaultTracker();
-        mTracker.setScreenName("Image~" + "TaskListActivity");
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -112,18 +105,13 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
 
         appBar = (AppBarLayout) findViewById(R.id.appbar);
         header = (LinearLayout) findViewById(R.id.header);
-//        if (userInfo == null) {
-//            ViewGroup.LayoutParams params = header.getLayoutParams();
-//            params.height = 100;
-////            params.width = 100;
-//            header.setLayoutParams(params);
-//        }
-
 
         username = (TextView) findViewById(R.id.username);
         View navigationHeader = navigationView.getHeaderView(0);
         navHeaderUsername = (TextView) navigationHeader.findViewById(R.id.nav_header_username);
         navHeaderUserImage = (CircleImageView) navigationHeader.findViewById(R.id.nav_header_user_image);
+
+        navHeader = (LinearLayout) navigationHeader.findViewById(R.id.nav_header_background);
 
 
         userImage = (CircleImageView) findViewById(R.id.user_image);
@@ -158,7 +146,7 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.sample_actions, menu);
+        getMenuInflater().inflate(R.menu.task_list_menu, menu);
         return true;
     }
 
@@ -302,11 +290,12 @@ public class TaskListActivity extends AppCompatActivity implements NavigationVie
             ViewGroup.LayoutParams layoutParams = appBar.getLayoutParams();
             layoutParams.height = 175;
             appBar.setLayoutParams(layoutParams);
-
-//            ViewGroup.LayoutParams params = header.getLayoutParams();
             header.setVisibility(View.GONE);
-//            params.height = 0;
-//            header.setLayoutParams(params);
+
+            ViewGroup.LayoutParams layoutParams1 = navHeader.getLayoutParams();
+            layoutParams1.height =25;
+            navHeader.setLayoutParams(layoutParams1);
+
 
             userImage.setVisibility(View.GONE);
             username.setVisibility(View.GONE);

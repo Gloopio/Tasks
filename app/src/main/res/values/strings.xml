@@ -77,8 +77,18 @@
     <string name="user_has_no_access">User %1$s has no access to the task.</string>
     <string name="my_tasks">My Tasks</string>
     <string name="groups">Groups</string>
-    <string name="members">Members</string>
     <string name="done">Done</string>
+    <string name="tasks">Tasks</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="skip">Skip</string>
+    <string name="sign_up">Sign up</string>
+    <string name="or">OR</string>
+    <string name="members">Members</string>
+    <string name="add">Add</string>
+    <string name="title">Title</string>
+    <string name="name">Name</string>
+    <string name="notes">Notes</string>
 
 
 </resources>

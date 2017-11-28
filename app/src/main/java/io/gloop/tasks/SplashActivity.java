@@ -6,8 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.facebook.FacebookSdk;
 
 import io.fabric.sdk.android.Fabric;
 import io.gloop.Gloop;
@@ -28,13 +27,8 @@ public class SplashActivity extends Activity {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        TasksApplication application = (TasksApplication) getApplication();
-        Tracker mTracker = application.getDefaultTracker();
-        mTracker.setScreenName("Image~" + "SplashScreen");
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-
         Fabric.with(this, new Crashlytics());
-//        FacebookSdk.sdkInitialize(getApplicationContext());
+        FacebookSdk.sdkInitialize(getApplicationContext());
         SharedPreferencesStore.setContext(getBaseContext());
 
         if (SharedPreferencesStore.isFirstStart())
@@ -43,7 +37,6 @@ public class SplashActivity extends Activity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-
                     // setup Gloop
                     // set apiKey and host in the AndroidManifest.xml file.
                     // It is also possible to pass them as parameters to the initialize method.

@@ -8,30 +8,30 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
 
-    <EditText
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        android:hint="Title"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp"/>
+        <EditText
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/title"
+            android:inputType="textPersonName"
+            android:text="@string/name"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp"/>
 
-    <EditText
-        android:id="@+id/text"
-        android:hint="Notes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textMultiLine"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="62dp"/>
+        <EditText
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/notes"
+            android:inputType="textMultiLine"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="62dp"/>
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

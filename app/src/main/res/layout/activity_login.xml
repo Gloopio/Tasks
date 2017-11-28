@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/login_layout"
               android:layout_width="match_parent"
@@ -42,21 +41,9 @@
                 android:layout_marginBottom="20sp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Tasks"
+                android:text="@string/tasks"
                 android:textColor="@android:color/white"
                 android:textSize="60sp"/>
-
-
-            <!--<TextView-->
-            <!--android:id="@+id/textView"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:textSize="60sp"-->
-            <!--android:layout_marginBottom="20sp"-->
-            <!--android:textColor="@color/colorPrimary"-->
-            <!--android:layout_weight="1"-->
-            <!--android:text="DRAWED"/>-->
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -67,7 +54,7 @@
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="email"
+                    android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true"
@@ -86,7 +73,7 @@
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="password"
+                    android:hint="@string/password"
                     android:imeActionId="@+id/login"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
@@ -126,7 +113,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginTop="16dp"
                     android:background="@color/login_button_background"
-                    android:text="Sign up"
+                    android:text="@string/sign_up"
                     android:textColor="@color/login_button_text_color"
                     android:textStyle="bold"/>
 
@@ -134,7 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="OR"/>
+                    android:text="@string/or"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -152,14 +139,13 @@
                         android:id="@+id/facebook_login_button"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:paddingLeft="12dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="3dp"
                         android:layout_marginRight="3dp"
-
-                        android:layout_gravity="center_horizontal"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:paddingBottom="11dp"
+                        android:paddingLeft="12dp"
+                        android:paddingTop="11dp"/>
 
                 </LinearLayout>
 
@@ -167,7 +153,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="OR"/>
+                    android:text="@string/or"/>
 
                 <Button
                     android:id="@+id/skip_button"
@@ -177,7 +163,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginTop="16dp"
                     android:background="@color/login_button_background"
-                    android:text="Skip"
+                    android:text="@string/skip"
                     android:textColor="@color/login_button_text_color"
                     android:textStyle="bold"/>
 

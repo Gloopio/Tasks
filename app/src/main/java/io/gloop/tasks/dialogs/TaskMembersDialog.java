@@ -34,7 +34,6 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,14 +50,14 @@ import io.gloop.tasks.model.UserInfo;
 
 public class TaskMembersDialog {
 
-    private Activity activity;
+    private Context context;
     private MyRecyclerViewAdapter adapter;
 
-    public TaskMembersDialog(Activity activity, UserInfo userInfo, Task task) {
-        this.activity = activity;
-        final View dialogView = View.inflate(activity, R.layout.dialog_task_members, null);
+    public TaskMembersDialog(Context context, UserInfo userInfo, Task task) {
+        this.context = context;
+        final View dialogView = View.inflate(context, R.layout.dialog_task_members, null);
 
-        final Dialog dialog = new Dialog(activity, R.style.MyAlertDialogStyle);
+        final Dialog dialog = new Dialog(context, R.style.MyAlertDialogStyle);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(dialogView);
 
@@ -75,27 +74,22 @@ public class TaskMembersDialog {
         final GloopGroup group = Gloop.all(GloopGroup.class).where().equalsTo("objectId", groupId).first();
         if (group != null) {
 
-            List<String> members;
-            if (group != null)
-                members = group.getMembers();
-            else
-                members = new ArrayList<>();
-
+            List<String> members = group.getMembers();
 
             // set up the RecyclerView
             final RecyclerView recyclerView = (RecyclerView) dialog.findViewById(R.id.member_list);
-            recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-            adapter = new MyRecyclerViewAdapter(activity, members, group);
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            adapter = new MyRecyclerViewAdapter(context, members, group);
             recyclerView.setAdapter(adapter);
 
 
             final AutoCompleteTextView newMember = (AutoCompleteTextView) dialog.findViewById(R.id.member_new);
-            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_CONTACTS}, 1);
             } else {
-                ContentResolver content = activity.getContentResolver();
+                ContentResolver content = context.getContentResolver();
                 Cursor cursor = content.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, null, null, null);
-                final ContactListAdapter adapter = new ContactListAdapter(activity, cursor, true);
+                final ContactListAdapter adapter = new ContactListAdapter(context, cursor, true);
                 newMember.setThreshold(0);
                 newMember.setAdapter(adapter);
             }
@@ -139,7 +133,7 @@ public class TaskMembersDialog {
 
             dialog.show();
         } else {
-            Snackbar.make(activity.findViewById(R.id.item_detail_root), "Only the owner is allowed to add new members",
+            Snackbar.make(((Activity) context).findViewById(R.id.item_detail_root), "Only the owner is allowed to add new members",
                     Snackbar.LENGTH_SHORT)
                     .show();
         }
@@ -210,8 +204,8 @@ public class TaskMembersDialog {
 
         int endRadius = (int) Math.hypot(w, h);
 
-        int mWidth = activity.getResources().getDisplayMetrics().widthPixels;
-        int mHeight = activity.getResources().getDisplayMetrics().heightPixels;
+        int mWidth = context.getResources().getDisplayMetrics().widthPixels;
+        int mHeight = context.getResources().getDisplayMetrics().heightPixels;
 
         int cx = mWidth / 2;
         int cy = mHeight / 2;

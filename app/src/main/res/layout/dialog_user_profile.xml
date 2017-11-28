@@ -39,8 +39,6 @@
                 android:layout_marginBottom="5dp"
                 android:src="@drawable/user_with_background"/>
 
-
-
             <TextView
                 android:id="@+id/profile_user_name"
                 android:layout_width="wrap_content"
